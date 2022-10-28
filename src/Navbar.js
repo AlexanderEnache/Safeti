@@ -16,7 +16,7 @@ const Navbar = ({ navigation }) => {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Nav Screen</Text>
                 <Button
-                    title="Go to Details... again"
+                    title="Go to Details... again???"
                     onPress={() => navigation.navigate('Home')}
                 />
             </View>      
