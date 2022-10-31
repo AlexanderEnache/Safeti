@@ -10,6 +10,11 @@
       "StackName": "amplify-safeti-staging-32132",
       "StackId": "arn:aws:cloudformation:us-east-2:053757373150:stack/amplify-safeti-staging-32132/a24106b0-4d01-11ed-9f84-0683506f6904",
       "AmplifyAppId": "d1k5wg8cv4gw1l"
+    },
+    "categories": {
+      "auth": {
+        "Safeti": {}
+      }
     }
   }
 }

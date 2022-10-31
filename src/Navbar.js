@@ -19,6 +19,16 @@ const Navbar = ({ navigation }) => {
                     title="Go to Details... again"
                     onPress={() => navigation.navigate('Home')}
                 />
+                <Text>Nav Screen</Text>
+                <Button
+                    title="Login"
+                    onPress={() => navigation.navigate('Login')}
+                />
+                <Text>Signup</Text>
+                <Button
+                    title="Signup"
+                    onPress={() => navigation.navigate('Signup')}
+                />
             </View>      
         </>
     );
