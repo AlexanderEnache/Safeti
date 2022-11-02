@@ -6,10 +6,12 @@ import {
   TextInput,
   View,
   Platform,
+  Alert
 } from 'react-native';
 import { Auth } from 'aws-amplify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [RePassword, setRePassword] = useState('');
@@ -20,20 +22,47 @@ const Signup = () => {
     async function LoginUser() {
         try {
             if(RePassword == password){
-              const user = await Auth.signUp({
-                username: email,
-                password,
-                // phone_number,
-                attributes: {
-                    email,
-                    phone_number,
-                    name,
-                    family_name
-                },
-                // autoSignIn: { // optional - enables auto sign in after user is confirmed
-                //     enabled: true,
-                // }
-              });
+              try{
+                const user = await Auth.signUp({
+                  username: email,
+                  password,
+                  attributes: {
+                      email,
+                      phone_number: "+1" + phone_number,
+                      name,
+                      family_name
+                  },
+                  autoSignIn: { // optional - enables auto sign in after user is confirmed
+                      enabled: true,
+                  }
+                });
+
+                try {
+                  await AsyncStorage.setItem('@user', email);
+                  navigation.navigate('Home');
+                } catch (e) {
+                  console.log(e);
+                }
+                console.log(user);
+              }catch(e){
+                console.log(e.message);
+                Alert.alert(
+                  "",
+                  e.message,
+                  // [
+                  //   {
+                  //     text: "Ask me later",
+                  //     onPress: () => console.log("Ask me later pressed")
+                  //   },
+                  //   {
+                  //     text: "Cancel",
+                  //     onPress: () => console.log("Cancel Pressed"),
+                  //     style: "cancel"
+                  //   },
+                  //   { text: "OK", onPress: () => console.log("OK Pressed") }
+                  // ]
+                );
+              }
             }
         } catch (error) {
             console.log('error signing up', error);
@@ -55,23 +84,25 @@ const Signup = () => {
             />
             <TextInput
                 onChangeText={setName}
-                placeholder="Name"
+                placeholder="First Name"
                 style={styles.modalInput}
             />
             <TextInput
                 onChangeText={setFamilyName}
-                placeholder="Family Name"
+                placeholder="Last Name"
                 style={styles.modalInput}
             />
             <TextInput
                 onChangeText={setPassword}
                 placeholder="Password"
                 style={styles.modalInput}
+                secureTextEntry={true}
             />
             <TextInput
                 onChangeText={setRePassword}
                 placeholder="RePassword"
                 style={styles.modalInput}
+                secureTextEntry={true}
             />
             <Pressable
                 onPress={() => {

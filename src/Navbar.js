@@ -1,7 +1,5 @@
 import React from 'react';
 import { StatusBar, StyleSheet, View, Text, Button } from 'react-native';
-// import { Amplify } from 'aws-amplify';
-// import awsconfig from './aws-exports';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 

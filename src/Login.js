@@ -6,19 +6,26 @@ import {
   TextInput,
   View,
   Platform,
+  Alert
 } from 'react-native';
 import { Auth } from 'aws-amplify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = () => {
+const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     async function LoginUser() {
         try {
             const user = await Auth.signIn(email, password);
-            console.log(user);
-        } catch (error) {
-            console.log('error signing in', error);
+            await AsyncStorage.setItem('@user', email);
+            navigation.navigate('Home');
+        } catch (e) {
+            console.log(e.message);
+            Alert.alert(
+                "",
+                e.message,
+            );
         }
     }
 
