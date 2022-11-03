@@ -23,8 +23,8 @@
     "git": "^0.1.5",
     "react": "18.0.0",
     "react-native": "0.69.6",
-    "react-navigation-drawer": "^2.7.2",
-    "react-native-gesture-handler": "~2.5.0"
+    "react-native-gesture-handler": "~2.5.0",
+    "react-navigation-drawer": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6"
