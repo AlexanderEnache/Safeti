@@ -11,6 +11,7 @@ import Home from './src/Home';
 import Other from './src/Other';
 import Login from './src/Login';
 import Signup from './src/Signup';
+// import { Todo } from './src/models';
 import Navbar from './src/Navbar';
 
 
@@ -36,7 +37,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: '#fff',
+    backgroundColor: '#fff',
     flex: 1,
   },
 });
