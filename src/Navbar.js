@@ -1,7 +1,5 @@
 import React from 'react';
 import { StatusBar, StyleSheet, View, Text, Button } from 'react-native';
-// import { Amplify } from 'aws-amplify';
-// import awsconfig from './aws-exports';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -18,6 +16,16 @@ const Navbar = ({ navigation }) => {
                 <Button
                     title="Go to Details.......... again"
                     onPress={() => navigation.navigate('Home')}
+                />
+                <Text>Nav Screen</Text>
+                <Button
+                    title="Login"
+                    onPress={() => navigation.navigate('Login')}
+                />
+                <Text>Signup</Text>
+                <Button
+                    title="Signup"
+                    onPress={() => navigation.navigate('Signup')}
                 />
             </View>      
         </>
