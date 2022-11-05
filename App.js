@@ -11,8 +11,8 @@ import Home from './src/Home';
 import Other from './src/Other';
 import Login from './src/Login';
 import Signup from './src/Signup';
-// import { Todo } from './src/models';
 import Navbar from './src/Navbar';
+import Draw from './src/routes/Drawer';
 
 
 Amplify.configure(awsconfig);
@@ -22,16 +22,13 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <View style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Navbar" component={Navbar} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Signup" component={Signup} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Other" component={Other} />
-        </Stack.Navigator>
-    </NavigationContainer>
-    </View>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Signup" component={Signup} />
+          </Stack.Navigator>
+      </NavigationContainer>
+      </View>
   );
 }
 
