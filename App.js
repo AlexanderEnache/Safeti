@@ -5,6 +5,7 @@ import awsconfig from './src/aws-exports';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
+import MapView from 'react-native-maps';
 
 
 import Home from './src/Home';
@@ -22,12 +23,13 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <View style={styles.container}>
-        <NavigationContainer>
+        {/* <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Signup" component={Signup} />
           </Stack.Navigator>
-      </NavigationContainer>
+      </NavigationContainer> */}
+      <MapView />
       </View>
   );
 }
