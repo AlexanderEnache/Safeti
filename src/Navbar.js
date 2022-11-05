@@ -32,6 +32,11 @@ const Navbar = ({ navigation }) => {
                     title="Drawer"
                     onPress={() => navigation.navigate('Draw')}
                 />
+                <Text>Map</Text>
+                <Button
+                    title="Map"
+                    onPress={() => navigation.navigate('Map')}
+                />
             </View>      
         </>
     );
