@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,14 +29,27 @@ export default function App() {
             <Stack.Screen name="Signup" component={Signup} />
           </Stack.Navigator>
       </NavigationContainer> */}
-      <MapView />
+        <MapView style={styles.map} />
       </View>
   );
 }
 
+// const styles = StyleSheet.create({
+//   container: {
+//     backgroundColor: '#fff',
+//     flex: 1,
+//   },
+// });
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 });
