@@ -27,6 +27,11 @@ const Navbar = ({ navigation }) => {
                     title="Signup"
                     onPress={() => navigation.navigate('Signup')}
                 />
+                <Text>Nav Screen</Text>
+                <Button
+                    title="Drawer"
+                    onPress={() => navigation.navigate('Draw')}
+                />
             </View>      
         </>
     );
