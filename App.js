@@ -14,6 +14,7 @@ import Login from './src/Login';
 import Signup from './src/Signup';
 import Navbar from './src/Navbar';
 import Draw from './src/routes/Drawer';
+import Map from './src/Map';
 
 
 Amplify.configure(awsconfig);
@@ -23,13 +24,13 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <View style={styles.container}>
+        <Map/>
         {/* <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Signup" component={Signup} />
           </Stack.Navigator>
       </NavigationContainer> */}
-        <MapView style={styles.map} />
       </View>
   );
 }
