@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -15,11 +15,30 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+
+    useEffect(() => {
+      AutoLogin();
+    }, []);
+
+    async function AutoLogin() {
+      try {
+          const user = await Auth.signIn("mazerat23@gmail.com", "Password1@");
+          await AsyncStorage.setItem('@user', "mazerat23@gmail.com");
+          navigation.navigate('Account');
+      } catch (e) {
+          console.log(e.message);
+          Alert.alert(
+              "",
+              e.message,
+          );
+      }
+    }
+
     async function LoginUser() {
         try {
             const user = await Auth.signIn(email, password);
             await AsyncStorage.setItem('@user', email);
-            navigation.navigate('Home');
+            navigation.navigate('Account');
         } catch (e) {
             console.log(e.message);
             Alert.alert(

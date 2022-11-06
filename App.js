@@ -13,6 +13,8 @@ import Other from './src/Other';
 import Login from './src/Login';
 import Signup from './src/Signup';
 import Navbar from './src/Navbar';
+import Account from './src/Account';
+import Dependent from './src/Dependent';
 import Draw from './src/routes/Drawer';
 import Map from './src/Map';
 
@@ -24,25 +26,28 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <View style={styles.container}>
-        <Map/>
-        {/* <NavigationContainer>
+        <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen name="Navbar" component={Navbar} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="Dependent" component={Dependent} />
+            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Signup" component={Signup} />
           </Stack.Navigator>
-      </NavigationContainer> */}
+      </NavigationContainer>
       </View>
   );
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: '#fff',
-//     flex: 1,
-//   },
-// });
-
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+});
+
+const stylesMap = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
