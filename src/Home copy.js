@@ -75,7 +75,7 @@ const TodoList = () => {
       const { items, isSynced } = snapshot;
       setTodos(items);
     });
-
+    console.log(todos);
     //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
     return function cleanup() {
       subscription.unsubscribe();
