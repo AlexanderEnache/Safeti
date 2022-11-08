@@ -11,6 +11,7 @@ type TodoMetaData = {
 export declare class Dependents {
   readonly id: string;
   readonly email?: string | null;
+  readonly guardian?: string | null;
   readonly name?: string | null;
   readonly location?: string | null;
   readonly createdAt?: string | null;

@@ -1,6 +1,7 @@
 type Dependents @model @auth(rules: [{allow: public}]) {
   id: ID!
   email: AWSEmail
+  guardian: AWSEmail
   name: String
   location: String
 }

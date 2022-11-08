@@ -17,6 +17,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "guardian": {
+                    "name": "guardian",
+                    "isArray": false,
+                    "type": "AWSEmail",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "name": {
                     "name": "name",
                     "isArray": false,
@@ -142,5 +149,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "5777690a6190a27a97fc0a91cb4c8756"
+    "version": "cab5a02c5136df733535f4157f587b5f"
 };

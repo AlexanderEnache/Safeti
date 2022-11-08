@@ -9,17 +9,27 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from './models';
 import { DataStore } from 'aws-amplify';
-
-
+import * as Location from 'expo-location';
 
 const Account = ({ navigation }) => {
+    const [location, setLocation] = useState(null);
     const [userEmail, setUserEmail] = useState('');
 
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
         });
-    });
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+              setErrorMsg('Permission to access location was denied');
+              return;
+            }
+            let loc = await Location.getCurrentPositionAsync({});
+            setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
+            console.log(loc.coords.latitude);
+        })();
+    }, []);
 
     console.log(userEmail);
 
