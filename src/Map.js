@@ -7,10 +7,6 @@ import {
 } from 'react-native';
 
 const Map = ({ navigation }) => {
-    
-
-   
-
   return (
     <>
         <View>

@@ -13,9 +13,9 @@ import Other from './src/Other';
 import Login from './src/Login';
 import Signup from './src/Signup';
 import Navbar from './src/Navbar';
-import Account from './src/Account';
-import Dependent from './src/Dependent';
-import Draw from './src/routes/Drawer';
+import Account from './src/Account/Account';
+import Dependent from './src/Account/Dependent';
+import UserDependents from './src/Account/UserDependents';
 import Map from './src/Map';
 
 
@@ -28,9 +28,10 @@ export default function App() {
     <View style={styles.container}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Navbar" component={Navbar} />
+            <Stack.Screen name="Home Page" component={Navbar} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Account" component={Account} />
+            {/* <Stack.Screen name="UserDependents" component={UserDependents} /> */}
             <Stack.Screen name="Dependent" component={Dependent} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Signup" component={Signup} />

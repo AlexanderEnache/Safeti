@@ -1,71 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Pressable,
   StyleSheet,
   Text,
-  TextInput,
-  View,
   Platform,
-  Alert
+  TextInput,
+  Pressable,
+  View
 } from 'react-native';
-import { Auth } from 'aws-amplify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dependents } from '../models';
+import { DataStore } from 'aws-amplify';
 
-const Login = ({ navigation }) => {
+const AddDependent = ({ navigation }) => {
+    const [userEmail, setUserEmail] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
     useEffect(() => {
-      AutoLogin();
+        AsyncStorage.getItem("@user").then((value) => {
+            setUserEmail(value);
+        });
     }, []);
 
-    async function AutoLogin() {
-      try {
-          const user = await Auth.signIn("mazerat23@gmail.com", "Password1@");
-          await AsyncStorage.setItem('@user', "mazerat23@gmail.com");
-          navigation.navigate('Account');
-      } catch (e) {
-          console.log(e.message);
-          Alert.alert(
-              "",
-              e.message,
-          );
-      }
-    }
+    console.log(userEmail);
 
-    async function LoginUser() {
-        try {
-            const user = await Auth.signIn(email, password);
-            await AsyncStorage.setItem('@user', email);
-            navigation.navigate('Account');
-        } catch (e) {
+    async function Add() {
+
+        // try {
+        //     const user = await Auth.signIn(username, password);
+        // } catch (error) {
+        //     console.log('error signing in', error);
+        // }
+
+        try{
+            email
+            await DataStore.save(
+                new Dependents({
+                    "email": email,
+                    "guardian": userEmail,
+                    "name": name
+                })
+            );
+        }catch(e){
             console.log(e.message);
             Alert.alert(
                 "",
                 e.message,
+                // [
+                //   {
+                //     text: "Ask me later",
+                //     onPress: () => console.log("Ask me later pressed")
+                //   },
+                //   {
+                //     text: "Cancel",
+                //     onPress: () => console.log("Cancel Pressed"),
+                //     style: "cancel"
+                //   },
+                //   { text: "OK", onPress: () => console.log("OK Pressed") }
+                // ]
             );
         }
     }
+
 
   return (
     <>
         <View>
             <TextInput
-                onChangeText={setEmail}
+                onChangeText={ text => setEmail(text.toLowerCase()) }
                 placeholder="Email"
                 style={styles.modalInput}
             />
             <TextInput
-                onChangeText={setPassword}
-                placeholder="Password"
+                onChangeText={setName}
+                placeholder="Name"
                 style={styles.modalInput}
             />
             <Pressable
                 onPress={() => {
-                    LoginUser();
+                    Add();
                 }}
             >
-                <Text>Login</Text>
+                <Text>Signup</Text>
             </Pressable>
         </View>
     </>
@@ -165,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default AddDependent;

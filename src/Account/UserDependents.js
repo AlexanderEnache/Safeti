@@ -4,75 +4,48 @@ import {
   Text,
   Platform,
   FlatList,
-  Pressable,
-  Dimensions
+  Pressable
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Dependents } from './models';
+import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
-import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Dependent = ({ navigation, route }) => {
+const UserDependents = ({ navigation }) => {
+    // const [location, setLocation] = useState(null);
     const [userEmail, setUserEmail] = useState('');
-    const [dependentEmail, setDependentEmail] = useState('');
-    const [location, setLocation] = useState(() => {
-        return {lat: 45, lon: 45};
-    });
 
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
-            setDependentEmail(route.params.email);
-            getDependentLocation();
         });
- 
-        // getDependentLocation();
-
-        (async () => {
-      
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              setErrorMsg('Permission to access location was denied');
-              return;
-            }
-      
-            let location = await Location.getCurrentPositionAsync({});
-            // setLocation(location);
-            console.log(location);
-          })();
+        // (async () => {
+        //     let { status } = await Location.requestForegroundPermissionsAsync();
+        //     if (status !== 'granted') {
+        //       setErrorMsg('Permission to access location was denied');
+        //       return;
+        //     }
+        //     let loc = await Location.getCurrentPositionAsync({});
+        //     setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
+        //     console.log(loc.coords.latitude);
+        // })();
     }, []);
 
-    async function getDependentLocation() {
-        try{
-            const models = await DataStore.query(Dependents);
-            // console.log(models);
-
-            for(let i = 0; i < models.length; i++){
-                if(models[i].email == route.params.email){
-                    setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
-                    console.log(models[i].location);
-                }
-            }
-        }catch(e){
-            console.log(e);
-        }
-    }
-
     console.log(userEmail);
-    console.log(route.params.email);
+
 
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
       
         useEffect(() => {
-          //query the initial todolist and subscribe to data updates
           const subscription = DataStore.observeQuery(Dependents).subscribe((snapshot) => {
-            //isSynced can be used to show a loading spinner when the list is being loaded. 
             const { items, isSynced } = snapshot;
-            // console.log(items);
             setDependents(items);
           });
+      
+            console.log(dependents);
 
           //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
           return function cleanup() {
@@ -81,10 +54,27 @@ const Dependent = ({ navigation, route }) => {
       
         }, []);
       
+        // async function deleteTodo(todo) {
+        //   try {
+        //     await DataStore.delete(todo);
+        //   } catch (e) {
+        //     console.log('Delete failed: $e');
+        //   }
+        // }
+      
+        // async function setComplete(updateValue, todo) {
+        //   //update the todo item with updateValue
+        //   await DataStore.save(
+        //     Todo.copyOf(todo, updated => {
+        //       updated.isComplete = updateValue
+        //     })
+        //   );
+        // }
+      
         const renderItem = ({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("Dependent");
+              navigation.navigate("Dependent", { email: item.email });
             }}
             style={styles.todoContainer}
           >
@@ -102,18 +92,11 @@ const Dependent = ({ navigation, route }) => {
           />
         );
       };
+      
 
   return (
     <>
-        <Text>{ dependentEmail }</Text>
-        <MapView style={styles.map} 
-            region={{
-                latitude: location.lat, 
-                longitude: location.lon,
-                latitudeDelta: 0.005, 
-                longitudeDelta: 0.005
-            }}
-        />
+        <DependentList />
     </>
   );
 };
@@ -129,10 +112,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingVertical: 16,
     textAlign: 'center',
-  },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
   },
   todoContainer: {
     alignItems: 'center',
@@ -215,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dependent;
+export default UserDependents;
