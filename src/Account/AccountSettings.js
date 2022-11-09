@@ -1,71 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Pressable,
   StyleSheet,
   Text,
-  TextInput,
-  View,
   Platform,
-  Alert
+  Pressable,
+  View
 } from 'react-native';
-import { Auth } from 'aws-amplify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Auth } from 'aws-amplify';
 
-const Login = ({ navigation }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
+const Account = ({ navigation }) => {
     useEffect(() => {
-      AutoLogin();
+        AsyncStorage.getItem("@user").then((value) => {
+            setUserEmail(value);
+        });
     }, []);
-
-    async function AutoLogin() {
-      try {
-          const user = await Auth.signIn("mazerat23@gmail.com", "Password1@");
-          await AsyncStorage.setItem('@user', "mazerat23@gmail.com");
-          navigation.navigate('Account');
-      } catch (e) {
-          console.log(e.message);
-          Alert.alert(
-              "",
-              e.message,
-          );
-      }
-    }
-
-    async function LoginUser() {
-        try {
-            const user = await Auth.signIn(email, password);
-            await AsyncStorage.setItem('@user', email);
-            navigation.navigate('Account');
-        } catch (e) {
-            console.log(e.message);
-            Alert.alert(
-                "",
-                e.message,
-            );
-        }
-    }
 
   return (
     <>
         <View>
-            <TextInput
-                onChangeText={setEmail}
-                placeholder="Email"
-                style={styles.modalInput}
-            />
-            <TextInput
-                onChangeText={setPassword}
-                placeholder="Password"
-                style={styles.modalInput}
-            />
             <Pressable
-                onPress={() => {
-                    LoginUser();
+                onPress={async () => {
+                    try {
+                        await Auth.signOut();
+                    } catch (error) {
+                        console.log('error signing out: ', error);
+                    }
+                    navigation.navigate('Home Page');
                 }}
             >
-                <Text>Login</Text>
+                <Text>Signout</Text>
             </Pressable>
         </View>
     </>
@@ -165,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Account;

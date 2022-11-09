@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Auth } from 'aws-amplify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -18,6 +19,11 @@ const Signup = ({ navigation }) => {
     const [phone_number, setPhone] = useState('');
     const [name, setName] = useState('');
     const [family_name, setFamilyName] = useState('');
+    const [location, setLocation] = useState(null);
+
+    // useEffect(() => {
+      
+    // }, []);
 
     async function LoginUser() {
         try {
@@ -39,7 +45,7 @@ const Signup = ({ navigation }) => {
 
                 try {
                   await AsyncStorage.setItem('@user', email);
-                  navigation.navigate('Home');
+                  navigation.navigate('Account');
                 } catch (e) {
                   console.log(e);
                 }

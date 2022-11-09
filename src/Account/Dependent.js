@@ -4,26 +4,63 @@ import {
   Text,
   Platform,
   FlatList,
-  Pressable
+  Pressable,
+  Dimensions
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Dependents } from './models';
+import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
+import MapView from 'react-native-maps';
+import * as Location from 'expo-location';
 
-
-
-const Dependent = ({ navigation }) => {
+const Dependent = ({ navigation, route }) => {
     const [userEmail, setUserEmail] = useState('');
+    const [dependentEmail, setDependentEmail] = useState('');
+    const [location, setLocation] = useState(() => {
+        return {lat: 45, lon: 45};
+    });
 
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
+            setDependentEmail(route.params.email);
+            getDependentLocation();
         });
-    });
+ 
+        // getDependentLocation();
+
+        (async () => {
+      
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+              setErrorMsg('Permission to access location was denied');
+              return;
+            }
+      
+            let location = await Location.getCurrentPositionAsync({});
+            // setLocation(location);
+            console.log(location);
+          })();
+    }, []);
+
+    async function getDependentLocation() {
+        try{
+            const models = await DataStore.query(Dependents);
+            // console.log(models);
+
+            for(let i = 0; i < models.length; i++){
+                if(models[i].email == route.params.email){
+                    setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
+                    console.log(models[i].location);
+                }
+            }
+        }catch(e){
+            console.log(e);
+        }
+    }
 
     console.log(userEmail);
-    console.log(navigation.getState());
-
+    console.log(route.params.email);
 
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
@@ -36,8 +73,6 @@ const Dependent = ({ navigation }) => {
             // console.log(items);
             setDependents(items);
           });
-      
-            console.log(dependents);
 
           //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
           return function cleanup() {
@@ -46,28 +81,8 @@ const Dependent = ({ navigation }) => {
       
         }, []);
       
-        // async function deleteTodo(todo) {
-        //   try {
-        //     await DataStore.delete(todo);
-        //   } catch (e) {
-        //     console.log('Delete failed: $e');
-        //   }
-        // }
-      
-        // async function setComplete(updateValue, todo) {
-        //   //update the todo item with updateValue
-        //   await DataStore.save(
-        //     Todo.copyOf(todo, updated => {
-        //       updated.isComplete = updateValue
-        //     })
-        //   );
-        // }
-      
         const renderItem = ({ item }) => (
           <Pressable
-            // onLongPress={() => {
-            //   deleteTodo(item);
-            // }}
             onPress={() => {
               navigation.navigate("Dependent");
             }}
@@ -87,12 +102,18 @@ const Dependent = ({ navigation }) => {
           />
         );
       };
-      
 
   return (
     <>
-        <Text>+ Add Todo</Text>
-        <DependentList />
+        <Text>{ dependentEmail }</Text>
+        <MapView style={styles.map} 
+            region={{
+                latitude: location.lat, 
+                longitude: location.lon,
+                latitudeDelta: 0.005, 
+                longitudeDelta: 0.005
+            }}
+        />
     </>
   );
 };
@@ -108,6 +129,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingVertical: 16,
     textAlign: 'center',
+  },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
   todoContainer: {
     alignItems: 'center',

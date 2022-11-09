@@ -3,95 +3,87 @@ import {
   StyleSheet,
   Text,
   Platform,
-  FlatList,
-  Pressable
+  TextInput,
+  Pressable,
+  View
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Dependents } from './models';
+import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 
-
-
-const Account = ({ navigation }) => {
+const AddDependent = ({ navigation }) => {
     const [userEmail, setUserEmail] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
 
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
         });
-    });
+    }, []);
 
     console.log(userEmail);
 
+    async function Add() {
 
-    const DependentList = () => {
-        const [dependents, setDependents] = useState([]);
-      
-        useEffect(() => {
-          //query the initial todolist and subscribe to data updates
-          const subscription = DataStore.observeQuery(Dependents).subscribe((snapshot) => {
-            //isSynced can be used to show a loading spinner when the list is being loaded. 
-            const { items, isSynced } = snapshot;
-            // console.log(items);
-            setDependents(items);
-          });
-      
-            console.log(dependents);
+        // try {
+        //     const user = await Auth.signIn(username, password);
+        // } catch (error) {
+        //     console.log('error signing in', error);
+        // }
 
-          //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
-          return function cleanup() {
-            subscription.unsubscribe();
-          }
-      
-        }, []);
-      
-        // async function deleteTodo(todo) {
-        //   try {
-        //     await DataStore.delete(todo);
-        //   } catch (e) {
-        //     console.log('Delete failed: $e');
-        //   }
-        // }
-      
-        // async function setComplete(updateValue, todo) {
-        //   //update the todo item with updateValue
-        //   await DataStore.save(
-        //     Todo.copyOf(todo, updated => {
-        //       updated.isComplete = updateValue
-        //     })
-        //   );
-        // }
-      
-        const renderItem = ({ item }) => (
-          <Pressable
-            // onLongPress={() => {
-            //   deleteTodo(item);
-            // }}
-            onPress={() => {
-              navigation.navigate("Dependent", { email: item.email });
-            }}
-            style={styles.todoContainer}
-          >
-            <Text>
-              <Text>{item.email}</Text>
-            </Text>
-          </Pressable>
-        );
-      
-        return (
-          <FlatList
-            data={dependents}
-            keyExtractor={({ email }) => email}
-            renderItem={renderItem}
-          />
-        );
-      };
-      
+        try{
+            email
+            await DataStore.save(
+                new Dependents({
+                    "email": email,
+                    "guardian": userEmail,
+                    "name": name
+                })
+            );
+        }catch(e){
+            console.log(e.message);
+            Alert.alert(
+                "",
+                e.message,
+                // [
+                //   {
+                //     text: "Ask me later",
+                //     onPress: () => console.log("Ask me later pressed")
+                //   },
+                //   {
+                //     text: "Cancel",
+                //     onPress: () => console.log("Cancel Pressed"),
+                //     style: "cancel"
+                //   },
+                //   { text: "OK", onPress: () => console.log("OK Pressed") }
+                // ]
+            );
+        }
+    }
+
 
   return (
     <>
-        <Text>+ Add Todo</Text>
-        <DependentList />
+        <View>
+            <TextInput
+                onChangeText={ text => setEmail(text.toLowerCase()) }
+                placeholder="Email"
+                style={styles.modalInput}
+            />
+            <TextInput
+                onChangeText={setName}
+                placeholder="Name"
+                style={styles.modalInput}
+            />
+            <Pressable
+                onPress={() => {
+                    Add();
+                }}
+            >
+                <Text>Signup</Text>
+            </Pressable>
+        </View>
     </>
   );
 };
@@ -189,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Account;
+export default AddDependent;
