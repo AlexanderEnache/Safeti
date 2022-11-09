@@ -9,15 +9,11 @@ import MapView from 'react-native-maps';
 
 
 import Home from './src/Home';
-import Other from './src/Other';
 import Login from './src/Login';
 import Signup from './src/Signup';
 import Navbar from './src/Navbar';
 import Account from './src/Account/Account';
 import Dependent from './src/Account/Dependent';
-import UserDependents from './src/Account/UserDependents';
-import Map from './src/Map';
-
 
 Amplify.configure(awsconfig);
 
@@ -31,7 +27,6 @@ export default function App() {
             <Stack.Screen name="Home Page" component={Navbar} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Account" component={Account} />
-            {/* <Stack.Screen name="UserDependents" component={UserDependents} /> */}
             <Stack.Screen name="Dependent" component={Dependent} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Signup" component={Signup} />
@@ -45,18 +40,5 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     flex: 1,
-  },
-});
-
-const stylesMap = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
   },
 });

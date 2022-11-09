@@ -3,23 +3,14 @@ import {
   StyleSheet,
   Text,
   Platform,
-  FlatList,
-  TextInput,
   Pressable,
   View
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Dependents } from '../models';
-import { DataStore, Auth } from 'aws-amplify';
-import * as Location from 'expo-location';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Auth } from 'aws-amplify';
+
 
 const Account = ({ navigation }) => {
-    const [userEmail, setUserEmail] = useState('');
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
