@@ -33,6 +33,7 @@ const Account = ({ navigation }) => {
             let loc = await Location.getCurrentPositionAsync({});
             setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
             console.log(loc.coords.latitude);
+            console.log(loc.coords.longitude);
         })();
     }, []);
 

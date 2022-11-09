@@ -5,7 +5,9 @@ import {
   Platform,
   FlatList,
   Pressable,
-  Dimensions
+  Dimensions,
+  View,
+  Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
@@ -16,9 +18,13 @@ import * as Location from 'expo-location';
 const Dependent = ({ navigation, route }) => {
     const [userEmail, setUserEmail] = useState('');
     const [dependentEmail, setDependentEmail] = useState('');
+    const [boundaryLat, setBoundaryLat] = useState(null);
+    const [boundaryLon, setBoundaryLon] = useState(null);
     const [location, setLocation] = useState(() => {
         return {lat: 45, lon: 45};
     });
+    const [toggle, setToggle] = useState(false);
+    const boundLength = 0.00090;
 
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
@@ -39,9 +45,56 @@ const Dependent = ({ navigation, route }) => {
       
             let location = await Location.getCurrentPositionAsync({});
             // setLocation(location);
-            console.log(location);
+            // console.log(location);
           })();
     }, []);
+
+    async function SetBoundary(coords) {
+      let lat = coords.nativeEvent.coordinate.latitude;
+      let lon = coords.nativeEvent.coordinate.longitude;
+
+      // isBetween
+
+      if(
+        location.lat > lat + boundLength/2 || 
+        location.lat < lat - boundLength/2 ||
+        location.lon > lon + boundLength/2 || 
+        location.lon < lon - boundLength/2
+      ){
+        // console.log("Out of Bounds");
+        Alert.alert(
+          "",
+          "Your child is currently OUT OF BOUNDS",
+        );
+      }else{
+        Alert.alert(
+          "",
+          "Your child is currently in bounds",
+        );
+      }
+
+      // try{
+      //     const models = await DataStore.query(Dependents);
+      //     // console.log(models);
+
+      //     for(let i = 0; i < models.length; i++){
+      //         if(models[i].email == route.params.email){
+      //             setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
+      //             console.log(models[i].location);
+      //         }
+      //     }
+      // }catch(e){
+      //     console.log(e);
+      // }
+  }
+
+  function Toggle() {
+    setToggle(!toggle);
+    Alert.alert(
+      "",
+      "Click where you want to set a boundary",
+    );
+  }
 
     async function getDependentLocation() {
         try{
@@ -51,7 +104,7 @@ const Dependent = ({ navigation, route }) => {
             for(let i = 0; i < models.length; i++){
                 if(models[i].email == route.params.email){
                     setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
-                    console.log(models[i].location);
+                    // console.log(models[i].location);
                 }
             }
         }catch(e){
@@ -59,8 +112,8 @@ const Dependent = ({ navigation, route }) => {
         }
     }
 
-    console.log(userEmail);
-    console.log(route.params.email);
+    // console.log(userEmail);
+    // console.log(route.params.email);
 
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
@@ -105,15 +158,24 @@ const Dependent = ({ navigation, route }) => {
 
   return (
     <>
-        <Text>{ dependentEmail }</Text>
-        <MapView style={styles.map} 
-            region={{
-                latitude: location.lat, 
-                longitude: location.lon,
-                latitudeDelta: 0.005, 
-                longitudeDelta: 0.005
-            }}
-        />
+      <View>
+      <Pressable style={styles.button} onPress={() => {Toggle()}}>
+              <Text>toggle</Text>
+          </Pressable>
+          {/* <Text>{ dependentEmail }</Text> */}
+          <MapView style={styles.map} 
+              region={{
+                  latitude: location.lat, 
+                  longitude: location.lon,
+                  latitudeDelta: 0.005, 
+                  longitudeDelta: 0.005
+              }}
+              onPress={SetBoundary}
+          />
+          {/* <Pressable onClick={() => {toggle = !toggle}}>
+              <Text>toggle</Text>
+          </Pressable> */}
+      </View>
     </>
   );
 };
