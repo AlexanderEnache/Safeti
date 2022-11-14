@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Pressable } from 'react-native';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
-import MapView from 'react-native-maps';
-
 
 import Home from './src/Home';
 import Login from './src/Login';
@@ -26,7 +23,12 @@ export default function App() {
           <Stack.Navigator>
             <Stack.Screen name="Home Page" component={Navbar} />
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="Safeti" component={Account} 
+             options={{
+              headerLeft: () => (
+                null
+              ),
+            }}/>
             <Stack.Screen name="Dependent" component={Dependent} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Signup" component={Signup} />

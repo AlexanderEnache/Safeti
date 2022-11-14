@@ -26,7 +26,7 @@ const Navbar = ({ navigation }) => {
                     title="Signup"
                     onPress={() => navigation.navigate('Signup')}
                 />
-                <Text>Nav Screen</Text>
+                {/* <Text>Nav Screen</Text>
                 <Button
                     title="Drawer"
                     onPress={() => navigation.navigate('Draw')}
@@ -35,7 +35,7 @@ const Navbar = ({ navigation }) => {
                 <Button
                     title="Map"
                     onPress={() => navigation.navigate('Map')}
-                />
+                /> */}
             </View>      
         </>
     );

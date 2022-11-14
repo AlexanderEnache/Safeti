@@ -3,55 +3,67 @@ import {
   StyleSheet,
   Text,
   Platform,
-  FlatList,
   Pressable,
   Dimensions,
   View,
   Alert
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import MapView from 'react-native-maps';
-import * as Location from 'expo-location';
+
+let toggle = false;
 
 const Dependent = ({ navigation, route }) => {
-    const [userEmail, setUserEmail] = useState('');
-    const [dependentEmail, setDependentEmail] = useState('');
-    const [boundaryLat, setBoundaryLat] = useState(null);
-    const [boundaryLon, setBoundaryLon] = useState(null);
+    // const [userEmail, setUserEmail] = useState('');
+    // const [dependentEmail, setDependentEmail] = useState('');
+    const [boundaryLat, setBoundaryLat] = useState(0);
+    const [boundaryLon, setBoundaryLon] = useState(0);
+    const [isToggle, setIsToggle] = useState(false);
     const [location, setLocation] = useState(() => {
         return {lat: 45, lon: 45};
     });
-    const [toggle, setToggle] = useState(false);
+    // const [toggle, setToggle] = useState(false);f
     const boundLength = 0.00090;
+    let lat = 0; 
+    let lon = 0;
 
     useEffect(() => {
-        AsyncStorage.getItem("@user").then((value) => {
-            setUserEmail(value);
-            setDependentEmail(route.params.email);
-            getDependentLocation();
-        });
- 
-        // getDependentLocation();
 
-        (async () => {
+      console.log(location.lat);
+
+        // AsyncStorage.getItem("@user").then((value) => {
+        //     setUserEmail(value);
+        // });
+
+        // setDependentEmail(route.params.email);
+        getDependentLocation();
+
+        // (async () => {
       
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              setErrorMsg('Permission to access location was denied');
-              return;
-            }
+        //     let { status } = await Location.requestForegroundPermissionsAsync();
+        //     if (status !== 'granted') {
+        //       setErrorMsg('Permission to access location was denied');
+        //       return;
+        //     }
       
-            let location = await Location.getCurrentPositionAsync({});
-            // setLocation(location);
-            // console.log(location);
-          })();
+        //     let location = await Location.getCurrentPositionAsync({});
+        //   })();
     }, []);
 
     async function SetBoundary(coords) {
-      let lat = coords.nativeEvent.coordinate.latitude;
-      let lon = coords.nativeEvent.coordinate.longitude;
+      console.log(toggle);
+      if(!toggle){
+        return;
+      }
+
+      toggle = false;
+      
+      lat = coords.nativeEvent.coordinate.latitude;
+      lon = coords.nativeEvent.coordinate.longitude;
+
+      setBoundaryLat(lat);
+      setBoundaryLon(lon);
 
       // isBetween
 
@@ -72,28 +84,20 @@ const Dependent = ({ navigation, route }) => {
           "Your child is currently in bounds",
         );
       }
-
-      // try{
-      //     const models = await DataStore.query(Dependents);
-      //     // console.log(models);
-
-      //     for(let i = 0; i < models.length; i++){
-      //         if(models[i].email == route.params.email){
-      //             setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
-      //             console.log(models[i].location);
-      //         }
-      //     }
-      // }catch(e){
-      //     console.log(e);
-      // }
   }
 
   function Toggle() {
-    setToggle(!toggle);
+    console.log(toggle);
+    if(toggle){
+      return;
+    }
+    toggle = true;
+    console.log(toggle);
     Alert.alert(
       "",
       "Click where you want to set a boundary",
     );
+    setIsToggle(toggle);
   }
 
     async function getDependentLocation() {
@@ -102,6 +106,7 @@ const Dependent = ({ navigation, route }) => {
             // console.log(models);
 
             for(let i = 0; i < models.length; i++){
+              console.log(models[i].location);
                 if(models[i].email == route.params.email){
                     setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
                     // console.log(models[i].location);
@@ -112,75 +117,58 @@ const Dependent = ({ navigation, route }) => {
         }
     }
 
-    // console.log(userEmail);
-    // console.log(route.params.email);
-
-    const DependentList = () => {
-        const [dependents, setDependents] = useState([]);
-      
-        useEffect(() => {
-          //query the initial todolist and subscribe to data updates
-          const subscription = DataStore.observeQuery(Dependents).subscribe((snapshot) => {
-            //isSynced can be used to show a loading spinner when the list is being loaded. 
-            const { items, isSynced } = snapshot;
-            // console.log(items);
-            setDependents(items);
-          });
-
-          //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
-          return function cleanup() {
-            subscription.unsubscribe();
-          }
-      
-        }, []);
-      
-        const renderItem = ({ item }) => (
-          <Pressable
-            onPress={() => {
-              navigation.navigate("Dependent");
-            }}
-            style={styles.todoContainer}
-          >
-            <Text>
-              <Text>{item.email}</Text>
-            </Text>
-          </Pressable>
-        );
-      
-        return (
-          <FlatList
-            data={dependents}
-            keyExtractor={({ email }) => email}
-            renderItem={renderItem}
-          />
-        );
-      };
-
   return (
     <>
       <View>
-      <Pressable style={styles.button} onPress={() => {Toggle()}}>
-              <Text>toggle</Text>
+      {!toggle ?
+        <View>
+          <Pressable style={styles.buttonContainer} onPress={() => {Toggle()}}>
+            <Text>Set Boundary</Text>
           </Pressable>
-          {/* <Text>{ dependentEmail }</Text> */}
-          <MapView style={styles.map} 
-              region={{
-                  latitude: location.lat, 
-                  longitude: location.lon,
-                  latitudeDelta: 0.005, 
-                  longitudeDelta: 0.005
-              }}
-              onPress={SetBoundary}
-          />
-          {/* <Pressable onClick={() => {toggle = !toggle}}>
-              <Text>toggle</Text>
-          </Pressable> */}
+        </View>
+      : <View>
+          <Pressable style={styles.buttonContainerPressed} onPress={() => {Toggle()}}>
+            <Text>Set Boundary</Text>
+          </Pressable>
+        </View>}
+        <MapView style={styles.map} 
+            region={{
+                latitude: location.lat, 
+                longitude: location.lon,
+                latitudeDelta: 0.005, 
+                longitudeDelta: 0.005
+            }}
+            onPress={SetBoundary}
+        >
+        <MapView.Marker
+          coordinate={{
+            latitude: location.lat,
+            longitude: location.lon
+          }}
+          title={"title"}
+          description={"description"}
+        />
+
+
+        <MapView.Circle
+                key = { '(this.state.currentLongitude + this.state.currentLongitude).toString()' }
+                center = { {latitude: boundaryLat, longitude: boundaryLon} }
+                radius = { 40 }
+                strokeWidth = { 1 }
+                strokeColor = { '#1a66ff' }
+                fillColor = { 'rgba(230,238,255,0.5)' }
+                // onRegionChangeComplete = { this.onRegionChangeComplete.bind(this) }
+        />
+        </MapView>
       </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  panel:{
+    position: 'relative'
+  },
   headerContainer: {
     backgroundColor: '#4696ec',
     paddingTop: Platform.OS === 'ios' ? 44 : 0,
@@ -237,6 +225,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignSelf: 'center',
     backgroundColor: '#4696ec',
+    borderRadius: 99,
+    paddingHorizontal: 8,
+  },
+  buttonContainerPressed: {
+    alignSelf: 'center',
+    backgroundColor: 'white',
     borderRadius: 99,
     paddingHorizontal: 8,
   },

@@ -11,10 +11,11 @@ import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import * as Location from 'expo-location';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import UserDependents from './UserDependents';
 import AddDependent from './AddDependent';
 import AccountSettings from './AccountSettings';
+import axios from 'axios';
+import { gyrosope } from 'react-native-sensors';
 
 const Account = ({ navigation }) => {
     const [location, setLocation] = useState(null);
@@ -24,17 +25,56 @@ const Account = ({ navigation }) => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
         });
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              setErrorMsg('Permission to access location was denied');
-              return;
-            }
-            let loc = await Location.getCurrentPositionAsync({});
-            setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
-            console.log(loc.coords.latitude);
-            console.log(loc.coords.longitude);
-        })();
+
+
+        
+        
+
+        // const options = {
+        //   method: 'GET',
+        //   url: 'https://jgentes-crime-data-v1.p.rapidapi.com/crime',
+        //   params: {
+        //     startdate: '9/19/2015',
+        //     enddate: '9/25/2015',
+        //     long: '-122.5076392',
+        //     lat: '37.757815'
+        //   },
+        //   headers: {
+        //     'X-RapidAPI-Key': '39224e976emsh24543633d5ae539p14bf00jsn6909443a7619',
+        //     'X-RapidAPI-Host': 'jgentes-Crime-Data-v1.p.rapidapi.com'
+        //   }
+        // };
+
+        // axios.request(options).then(function (response) {
+        //   console.log("APASASPAPSASPASPAPPA");
+        //   console.log(response.data);
+        // }).catch(function (error) {
+        //   console.error(error);
+        // });
+
+        // (async () => {
+        //     let { status } = await Location.requestForegroundPermissionsAsync();
+        //     if (status !== 'granted') {
+        //       setErrorMsg('Permission to access location was denied');
+        //       return;
+        //     }
+        //     let loc = await Location.getCurrentPositionAsync({});
+        //     setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
+        //     console.log(loc.coords.latitude);
+        //     console.log(loc.coords.longitude);
+
+        //     // async function setComplete(updateValue, todo) {
+        //     //update the todo item with updateValue
+
+        //     // const models = await DataStore.query(Dependents);
+        //     // console.log(models);
+
+        //     // await DataStore.save(
+        //     //   Dependents.copyOf(todo, updated => {
+        //     //     updated.isComplete = updateValue
+        //     //   })
+        //     // );
+        // })();
     }, []);
 
     console.log(userEmail);
@@ -105,12 +145,14 @@ const Account = ({ navigation }) => {
        // 1 866 975 0925
 const Tab = createBottomTabNavigator();
 
+// Tab.navigationOptions.headerLeft = null;
+
   return (
     <>
         <Tab.Navigator>
             <Tab.Screen name="Dependents" component={UserDependents} />
             <Tab.Screen name="Add Dependent" component={AddDependent} />
-            <Tab.Screen name="Account" component={AccountSettings} />
+            <Tab.Screen name="Log Out" component={AccountSettings} />
         </Tab.Navigator>
         {/* <DependentList /> */}
     </>

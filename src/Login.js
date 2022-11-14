@@ -23,7 +23,7 @@ const Login = ({ navigation }) => {
       try {
           const user = await Auth.signIn("mazerat23@gmail.com", "Password1@");
           await AsyncStorage.setItem('@user', "mazerat23@gmail.com");
-          navigation.navigate('Account');
+          navigation.navigate('Safeti');
       } catch (e) {
           console.log(e.message);
           Alert.alert(
@@ -37,7 +37,7 @@ const Login = ({ navigation }) => {
         try {
             const user = await Auth.signIn(email, password);
             await AsyncStorage.setItem('@user', email);
-            navigation.navigate('Account');
+            navigation.navigate('Safeti');
         } catch (e) {
             console.log(e.message);
             Alert.alert(

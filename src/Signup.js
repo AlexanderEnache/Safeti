@@ -45,7 +45,7 @@ const Signup = ({ navigation }) => {
 
                 try {
                   await AsyncStorage.setItem('@user', email);
-                  navigation.navigate('Account');
+                  navigation.navigate('Safeti');
                 } catch (e) {
                   console.log(e);
                 }
