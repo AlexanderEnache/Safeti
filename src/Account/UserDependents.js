@@ -10,17 +10,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import * as Location from 'expo-location';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const UserDependents = ({ navigation }) => {
+const UserDependents = ({ route, navigation }) => {
     // const [location, setLocation] = useState(null);
     const [userEmail, setUserEmail] = useState('');
 
     useEffect(() => {
         AsyncStorage.getItem("@user").then((value) => {
-            setUserEmail(value);
+            setUserEmail(value.toLowerCase());
         });
+
+        // console.log(route);
         // (async () => {
         //     let { status } = await Location.requestForegroundPermissionsAsync();
         //     if (status !== 'granted') {
@@ -33,19 +33,68 @@ const UserDependents = ({ navigation }) => {
         // })();
     }, []);
 
-    console.log(userEmail);
+    // console.log(userEmail);
 
 
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
+        const [location, setLocation] = useState(null);
       
         useEffect(() => {
           const subscription = DataStore.observeQuery(Dependents).subscribe((snapshot) => {
             const { items, isSynced } = snapshot;
+
+            let all = items.slice();
+
+            // console.log(items);
+
+            
+            for(let i = 0; i < items.length; i++){
+              if(items[i].guardian !== userEmail){
+                items.splice(i);
+              }
+            }
+            
             setDependents(items);
+
+            // console.log("all");
+
+            // console.log(all);
+
+            (async () => {
+              let { status } = await Location.requestForegroundPermissionsAsync();
+              if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+              }
+              let loc = await Location.getCurrentPositionAsync({});
+              setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
+              // console.log(loc.coords.latitude);
+  
+              /* Models in DataStore are immutable. To update a record you must use the copyOf function
+              to apply updates to the item’s fields rather than mutating the instance directly */
+  
+              // console.log("ASASASASASSASASA");
+              // console.log(dependents);
+  
+              let sef = false;
+              for(let i = 0; i < all.length; i++){
+                // console.log(dependents[i].email + " ,,,,, " + userEmail);
+  
+                if(all[i].email == userEmail){
+                  sef = all[i];
+                  // console.log(dependents[i].email + " ,,,,, " + userEmail);
+                  // dependents.splice(i);
+                }
+              }
+              if(sef){
+                // console.log("Yes dependent");
+                await DataStore.save(Dependents.copyOf(sef, item => {
+                  item.location = loc.coords.latitude + "," + loc.coords.longitude;
+                }));
+              }
+            })();
           });
-      
-            console.log(dependents);
 
           //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
           return function cleanup() {
@@ -53,33 +102,16 @@ const UserDependents = ({ navigation }) => {
           }
       
         }, []);
-      
-        // async function deleteTodo(todo) {
-        //   try {
-        //     await DataStore.delete(todo);
-        //   } catch (e) {
-        //     console.log('Delete failed: $e');
-        //   }
-        // }
-      
-        // async function setComplete(updateValue, todo) {
-        //   //update the todo item with updateValue
-        //   await DataStore.save(
-        //     Todo.copyOf(todo, updated => {
-        //       updated.isComplete = updateValue
-        //     })
-        //   );
-        // }
-      
+
         const renderItem = ({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("Dependent", { email: item.email });
+              navigation.navigate("Dependent", { email: item.email, userEmail: userEmail});
             }}
             style={styles.todoContainer}
           >
             <Text>
-              <Text>{item.email}</Text>
+              <Text>{item.name}</Text>
             </Text>
           </Pressable>
         );
@@ -93,7 +125,6 @@ const UserDependents = ({ navigation }) => {
         );
       };
       
-
   return (
     <>
         <DependentList />

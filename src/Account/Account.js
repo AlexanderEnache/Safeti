@@ -9,9 +9,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
-import * as Location from 'expo-location';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import UserDependents from './UserDependents';
 import AddDependent from './AddDependent';
 import AccountSettings from './AccountSettings';
@@ -24,95 +22,77 @@ const Account = ({ navigation }) => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value);
         });
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              setErrorMsg('Permission to access location was denied');
-              return;
-            }
-            let loc = await Location.getCurrentPositionAsync({});
-            setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
-            console.log(loc.coords.latitude);
-            console.log(loc.coords.longitude);
-        })();
+        // console.log(userEmail);
+        // const subscription = gyroscope.subscribe(({x,y,z}) => {
+        //   console.log(x, y, z);
+        // });
+
+        // return () => {
+        //   subscription.unsubscribe();
+        // }
+        
+
+        // const options = {
+        //   method: 'GET',
+        //   url: 'https://jgentes-crime-data-v1.p.rapidapi.com/crime',
+        //   params: {
+        //     startdate: '9/19/2015',
+        //     enddate: '9/25/2015',
+        //     long: '-122.5076392',
+        //     lat: '37.757815'
+        //   },
+        //   headers: {
+        //     'X-RapidAPI-Key': '39224e976emsh24543633d5ae539p14bf00jsn6909443a7619',
+        //     'X-RapidAPI-Host': 'jgentes-Crime-Data-v1.p.rapidapi.com'
+        //   }
+        // };
+
+        // axios.request(options).then(function (response) {
+        //   console.log("APASASPAPSASPASPAPPA");
+        //   console.log(response.data);
+        // }).catch(function (error) {
+        //   console.error(error);
+        // });
+
+        // (async () => {
+        //     let { status } = await Location.requestForegroundPermissionsAsync();
+        //     if (status !== 'granted') {
+        //       setErrorMsg('Permission to access location was denied');
+        //       return;
+        //     }
+        //     let loc = await Location.getCurrentPositionAsync({});
+        //     setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
+        //     console.log(loc.coords.latitude);
+        //     console.log(loc.coords.longitude);
+
+        //     // async function setComplete(updateValue, todo) {
+        //     //update the todo item with updateValue
+
+        //     // const models = await DataStore.query(Dependents);
+        //     // console.log(models);
+
+        //     // await DataStore.save(
+        //     //   Dependents.copyOf(todo, updated => {
+        //     //     updated.isComplete = updateValue
+        //     //   })
+        //     // );
+        // })();
     }, []);
 
-    console.log(userEmail);
+    // console.log(userEmail);
 
-
-    const DependentList = () => {
-        const [dependents, setDependents] = useState([]);
-      
-        useEffect(() => {
-          //query the initial todolist and subscribe to data updates
-          const subscription = DataStore.observeQuery(Dependents).subscribe((snapshot) => {
-            //isSynced can be used to show a loading spinner when the list is being loaded. 
-            const { items, isSynced } = snapshot;
-            // console.log(items);
-            setDependents(items);
-          });
-      
-            console.log(dependents);
-
-          //unsubscribe to data updates when component is destroyed so that we don’t introduce a memory leak.
-          return function cleanup() {
-            subscription.unsubscribe();
-          }
-      
-        }, []);
-      
-        // async function deleteTodo(todo) {
-        //   try {
-        //     await DataStore.delete(todo);
-        //   } catch (e) {
-        //     console.log('Delete failed: $e');
-        //   }
-        // }
-      
-        // async function setComplete(updateValue, todo) {
-        //   //update the todo item with updateValue
-        //   await DataStore.save(
-        //     Todo.copyOf(todo, updated => {
-        //       updated.isComplete = updateValue
-        //     })
-        //   );
-        // }
-      
-        const renderItem = ({ item }) => (
-          <Pressable
-            // onLongPress={() => {
-            //   deleteTodo(item);
-            // }}
-            onPress={() => {
-              navigation.navigate("Dependent", { email: item.email });
-            }}
-            style={styles.todoContainer}
-          >
-            <Text>
-              <Text>{item.email}</Text>
-            </Text>
-          </Pressable>
-        );
-      
-        return (
-          <FlatList
-            data={dependents}
-            keyExtractor={({ email }) => email}
-            renderItem={renderItem}
-          />
-        );
-      };
        // 1 866 975 0925
 const Tab = createBottomTabNavigator();
 
+// Tab.navigationOptions.headerLeft = null;
+
   return (
     <>
-        <Tab.Navigator>
-            <Tab.Screen name="Dependents" component={UserDependents} />
-            <Tab.Screen name="Add Dependent" component={AddDependent} />
-            <Tab.Screen name="Account" component={AccountSettings} />
-        </Tab.Navigator>
-        {/* <DependentList /> */}
+      <Tab.Navigator>
+        <Tab.Screen name="Dependents" children={props => <UserDependents userEmail={userEmail} {...props} />} />
+        <Tab.Screen name="Add Dependent" component={AddDependent} />
+        <Tab.Screen name="Log Out" component={AccountSettings} />
+      </Tab.Navigator>
     </>
   );
 };
