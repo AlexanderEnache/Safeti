@@ -11,7 +11,7 @@ import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import * as Location from 'expo-location';
 
-const UserDependents = ({ navigation }) => {
+const UserDependents = ({ route, navigation }) => {
     // const [location, setLocation] = useState(null);
     const [userEmail, setUserEmail] = useState('');
 
@@ -19,6 +19,8 @@ const UserDependents = ({ navigation }) => {
         AsyncStorage.getItem("@user").then((value) => {
             setUserEmail(value.toLowerCase());
         });
+
+        // console.log(route);
         // (async () => {
         //     let { status } = await Location.requestForegroundPermissionsAsync();
         //     if (status !== 'granted') {
@@ -31,7 +33,7 @@ const UserDependents = ({ navigation }) => {
         // })();
     }, []);
 
-    console.log(userEmail);
+    // console.log(userEmail);
 
 
     const DependentList = () => {
@@ -86,12 +88,10 @@ const UserDependents = ({ navigation }) => {
                 }
               }
               if(sef){
-                console.log("Yes dependent");
+                // console.log("Yes dependent");
                 await DataStore.save(Dependents.copyOf(sef, item => {
                   item.location = loc.coords.latitude + "," + loc.coords.longitude;
                 }));
-              }else{
-                console.log("No dependent");
               }
             })();
           });
@@ -106,7 +106,7 @@ const UserDependents = ({ navigation }) => {
         const renderItem = ({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("Dependent", { email: item.email });
+              navigation.navigate("Dependent", { email: item.email, userEmail: userEmail});
             }}
             style={styles.todoContainer}
           >

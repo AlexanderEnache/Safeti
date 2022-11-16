@@ -1,11 +1,28 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 
+type BoundsMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 type DependentsMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
 type TodoMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+export declare class Bounds {
+  readonly id: string;
+  readonly email?: string | null;
+  readonly guardian?: string | null;
+  readonly location?: string | null;
+  readonly size?: number | null;
+  readonly time?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Bounds, BoundsMetaData>);
+  static copyOf(source: Bounds, mutator: (draft: MutableModel<Bounds, BoundsMetaData>) => MutableModel<Bounds, BoundsMetaData> | void): Bounds;
 }
 
 export declare class Dependents {
