@@ -4,9 +4,10 @@ import { schema } from './schema';
 
 
 
-const { Dependents, Todo } = initSchema(schema);
+const { Bounds, Dependents, Todo } = initSchema(schema);
 
 export {
+  Bounds,
   Dependents,
   Todo
 };

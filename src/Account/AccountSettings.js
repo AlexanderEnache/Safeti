@@ -11,11 +11,11 @@ import { Auth } from 'aws-amplify';
 
 
 const Account = ({ navigation }) => {
-    useEffect(() => {
-        AsyncStorage.getItem("@user").then((value) => {
-            setUserEmail(value);
-        });
-    }, []);
+    // useEffect(() => {
+    //     AsyncStorage.getItem("@user").then((value) => {
+    //         setUserEmail(value);
+    //     });
+    // }, []);
 
   return (
     <>
