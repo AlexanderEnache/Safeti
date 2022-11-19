@@ -12,7 +12,7 @@ type TodoMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-export declare class Bounds {
+type EagerBounds = {
   readonly id: string;
   readonly email?: string | null;
   readonly guardian?: string | null;
@@ -21,11 +21,26 @@ export declare class Bounds {
   readonly time?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<Bounds, BoundsMetaData>);
-  static copyOf(source: Bounds, mutator: (draft: MutableModel<Bounds, BoundsMetaData>) => MutableModel<Bounds, BoundsMetaData> | void): Bounds;
 }
 
-export declare class Dependents {
+type LazyBounds = {
+  readonly id: string;
+  readonly email?: string | null;
+  readonly guardian?: string | null;
+  readonly location?: string | null;
+  readonly size?: number | null;
+  readonly time?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Bounds = LazyLoading extends LazyLoadingDisabled ? EagerBounds : LazyBounds
+
+export declare const Bounds: (new (init: ModelInit<Bounds, BoundsMetaData>) => Bounds) & {
+  copyOf(source: Bounds, mutator: (draft: MutableModel<Bounds, BoundsMetaData>) => MutableModel<Bounds, BoundsMetaData> | void): Bounds;
+}
+
+type EagerDependents = {
   readonly id: string;
   readonly email?: string | null;
   readonly guardian?: string | null;

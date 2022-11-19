@@ -4,7 +4,8 @@ import {
   Text,
   Platform,
   FlatList,
-  Pressable
+  Pressable,
+  ImageBackground
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
@@ -35,7 +36,7 @@ const UserDependents = ({ route, navigation }) => {
 
     // console.log(userEmail);
 
-
+    
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
         const [location, setLocation] = useState(null);

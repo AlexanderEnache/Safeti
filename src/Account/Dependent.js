@@ -8,7 +8,8 @@ import {
   View,
   Alert,
   AsyncStorage,
-  FlatList
+  FlatList,
+  ImageBackground
 } from 'react-native';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
@@ -282,6 +283,9 @@ const Dependent = ({ route }) => {
 
   return (
     <>
+    <ImageBackground
+            source={require('./bg.png')}
+            style={{width: '100%', height: '100%'}}>
       <View>
       {/* {!toggle ?
         <View>
@@ -380,6 +384,7 @@ const Dependent = ({ route }) => {
           />
         </MapView>
       </View>
+      </ImageBackground>
     </>
   );
 };

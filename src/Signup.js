@@ -6,7 +6,8 @@ import {
   TextInput,
   View,
   Platform,
-  Alert
+  Alert,
+  ImageBackground
 } from 'react-native';
 import { Auth } from 'aws-amplify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -77,7 +78,10 @@ const Signup = ({ navigation }) => {
 
   return (
     <>
-        <View>
+        <ImageBackground
+            source={require('./bg.png')}
+            style={{width: '100%', height: '100%'}}>
+        <View style={styles.center}>
             <TextInput
                 onChangeText={setEmail}
                 placeholder="Email"
@@ -110,7 +114,7 @@ const Signup = ({ navigation }) => {
                 style={styles.modalInput}
                 secureTextEntry={true}
             />
-            <Pressable
+            <Pressable style={styles.buttonContainer}
                 onPress={() => {
                     LoginUser();
                 }}
@@ -118,6 +122,7 @@ const Signup = ({ navigation }) => {
                 <Text>Signup</Text>
             </Pressable>
         </View>
+        </ImageBackground>
     </>
   );
 };
@@ -177,6 +182,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#4696ec',
     borderRadius: 99,
     paddingHorizontal: 8,
+    marginTop: 50,
+    //width:'0%',
   },
   floatingButton: {
     position: 'absolute',
@@ -202,9 +209,16 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   modalInput: {
-    borderBottomWidth: 1,
-    marginBottom: 16,
-    padding: 8,
+    borderWidth: 1,
+    //marginBottom:8,
+    padding: 10,
+    backgroundColor: 'darkgrey',
+    marginTop:20,
+    //justifyContent: 'center',
+    alignContent: 'center',
+    // width: '80%',
+    // height: '15%',
+    opacity: '0.75',
   },
   modalDismissButton: {
     marginLeft: 'auto',
@@ -213,6 +227,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
   },
+  center: {
+    //justifyContent:'flex',
+    //alignContent: 'center',
+    alignSelf:'center',
+    height: '10%',
+    width: '95%',
+  }
 });
 
 export default Signup;
