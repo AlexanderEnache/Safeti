@@ -1,39 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
-  Platform
+  Platform,
+  Dimensions
 } from 'react-native';
+import Dependent from './Dependent';
+import { Dependents } from '../models';
+import { DataStore } from 'aws-amplify';
+import SetBoundary from './SetBoundary';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import UserDependents from './UserDependents';
-import AddDependent from './AddDependent';
-import AccountSettings from './AccountSettings';
+import { createStackNavigator } from '@react-navigation/stack';
 
-const Account = ({ route, navigation }) => {
-    const [location, setLocation] = useState(null);
-    const [userEmail, setUserEmail] = useState('');
+let toggle = false;
 
-    // useEffect(() => {
-    //   console.log(route);
-    // }, []);
+const DependentTabNavigator = ({ route }) => {
+  const [email, setUserEmail] = useState('');
+  const [dependentEmail, setDependentEmail] = useState('');
+  const [location, setLocation] = useState(() => {
+    return {lat: 45, lon: 45};
+  });
 
-const Tab = createBottomTabNavigator();
+  useEffect(() => {
+    console.log(route.params);
+    getDependentLocation();
+  }, []);
+
+  async function getDependentLocation() {
+    try{
+        const models = await DataStore.query(Dependents);
+        // console.log(models);
+
+        for(let i = 0; i < models.length; i++){
+            if(models[i].email == route.params.email){
+                console.log(models[i].location);
+                setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
+            }
+        }
+    }catch(e){
+        console.log(e);
+    }
+  }
+
+
+  const Tab = createStackNavigator();
 
   return (
     <>
       <Tab.Navigator>
-        <Tab.Screen name="Dependents" component={UserDependents}
-          initialParams={{userEmail: route.params.email}}
-        />
-        <Tab.Screen name="Add Dependent" component={AddDependent} 
-          initialParams={{userEmail: route.params.email}}
-        />
-        <Tab.Screen name="Log Out" component={AccountSettings} />
+        <Tab.Screen name="Dependent" component={Dependent} 
+            initialParams={{userEmail: route.params.userEmail, email: route.params.email, location: location}}
+            options={{
+                header: () => (
+                  null
+                ),
+              }}/>
+        <Tab.Screen name="SetBoundary" component={SetBoundary} 
+            initialParams={{email: route.params.userEmail, dependentEmail: route.params.email}}
+            options={{
+                header: () => (
+                  null
+                ),
+              }}/>
       </Tab.Navigator>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  panel:{
+    position: 'relative'
+  },
   headerContainer: {
     backgroundColor: '#4696ec',
     paddingTop: Platform.OS === 'ios' ? 44 : 0,
@@ -44,6 +80,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingVertical: 16,
     textAlign: 'center',
+  },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
   todoContainer: {
     alignItems: 'center',
@@ -89,6 +129,12 @@ const styles = StyleSheet.create({
     borderRadius: 99,
     paddingHorizontal: 8,
   },
+  buttonContainerPressed: {
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    borderRadius: 99,
+    paddingHorizontal: 8,
+  },
   floatingButton: {
     position: 'absolute',
     bottom: 44,
@@ -126,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Account;
+export default DependentTabNavigator;

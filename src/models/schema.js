@@ -31,17 +31,17 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "size": {
-                    "name": "size",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "time": {
                     "name": "time",
                     "isArray": false,
                     "type": "AWSTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "size": {
+                    "name": "size",
+                    "isArray": false,
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },

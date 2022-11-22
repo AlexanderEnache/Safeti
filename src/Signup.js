@@ -43,12 +43,7 @@ const Signup = ({ navigation }) => {
                   }
                 });
 
-                try {
-                  await AsyncStorage.setItem('@user', email);
-                  navigation.navigate('Safeti');
-                } catch (e) {
-                  console.log(e);
-                }
+                navigation.navigate('Safeti', {email: email});
                 console.log(user);
               }catch(e){
                 console.log(e.message);

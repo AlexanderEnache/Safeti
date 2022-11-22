@@ -16,28 +16,18 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState('');
 
     useEffect(() => {
+      setEmail("mazerat23@gmail.com");
+      setPassword("Password1@");
       AutoLogin();
     }, []);
 
     async function AutoLogin() {
-      try {
-          const user = await Auth.signIn("mazerat23@gmail.com", "Password1@");
-          await AsyncStorage.setItem('@user', "mazerat23@gmail.com");
-          navigation.navigate('Safeti');
-      } catch (e) {
-          console.log(e.message);
-          Alert.alert(
-              "",
-              e.message,
-          );
-      }
+          LoginUser();
     }
 
     async function LoginUser() {
         try {
-            const user = await Auth.signIn(email, password);
-            await AsyncStorage.setItem('@user', email);
-            navigation.navigate('Safeti');
+            const user = await Auth.signIn("mazerat23@gmail.com", "Password1@");
         } catch (e) {
             console.log(e.message);
             Alert.alert(
@@ -45,6 +35,7 @@ const Login = ({ navigation }) => {
                 e.message,
             );
         }
+        navigation.navigate('Safeti', {email: "mazerat23@gmail.com"});
     }
 
   return (

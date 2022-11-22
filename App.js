@@ -11,6 +11,7 @@ import Signup from './src/Signup';
 import Navbar from './src/Navbar';
 import Account from './src/Account/Account';
 import Dependent from './src/Account/Dependent';
+import DependentTabNavigator from './src/Account/DependentTabNavigator';
 
 Amplify.configure(awsconfig);
 
@@ -21,14 +22,22 @@ export default function App() {
     <View style={styles.container}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Home Page" component={Navbar} />
+            <Stack.Screen name="Home Page" component={Navbar} 
+              options={{
+                header: () => (
+                  null
+                ),
+              }}
+            />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Safeti" component={Account} 
              options={{
               headerLeft: () => (
                 null
               ),
-            }}/>
+            }}
+            />
+            <Stack.Screen name="DependentTabNavigator" component={DependentTabNavigator} />
             <Stack.Screen name="Dependent" component={Dependent} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Signup" component={Signup} />
