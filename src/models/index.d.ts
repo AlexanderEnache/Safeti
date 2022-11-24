@@ -16,8 +16,9 @@ export declare class Bounds {
   readonly id: string;
   readonly email?: string | null;
   readonly guardian?: string | null;
+  readonly timeStart?: string | null;
+  readonly timeStop?: string | null;
   readonly location?: string | null;
-  readonly time?: string | null;
   readonly size?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;

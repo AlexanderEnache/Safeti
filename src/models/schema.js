@@ -24,17 +24,24 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "timeStart": {
+                    "name": "timeStart",
+                    "isArray": false,
+                    "type": "AWSTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "timeStop": {
+                    "name": "timeStop",
+                    "isArray": false,
+                    "type": "AWSTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "location": {
                     "name": "location",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "time": {
-                    "name": "time",
-                    "isArray": false,
-                    "type": "AWSTime",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -236,5 +243,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "419e4a1b08a0b0ec629e1df1f2bfba5e"
+    "version": "1fcce3abd8f500663465fb377adaccd5"
 };

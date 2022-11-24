@@ -11,16 +11,28 @@ import {
 } from 'react-native';
 import { DataStore } from 'aws-amplify';
 import { Bounds } from '../models';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const AddTodoModal = ({ modalVisible, setModalVisible, email, dependentEmail }) => {
+const AddTodoModal = ({ modalVisible, setModalVisible, email, dependentEmail, location }) => {
 //   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [guardian, setGuardian] = useState('');
   const [size, setSize] = useState('');
   const [time, setTime] = useState('');
 
+  const [start, setStart] = useState(new Date());
+  const [end, setEnd] = useState(new Date());
+
   async function addTodo() {
-    await DataStore.save(new Bounds({ email: dependentEmail, guardian: email, location: "42.308340, -82.878682", size: 555, time: "17:38:55.238" }));
+    console.log("location");
+    console.log("location");
+    console.log("location");
+    console.log("location");
+    console.log("location");
+    console.log("location");
+    console.log("location");
+    console.log(location);
+    await DataStore.save(new Bounds({ email: dependentEmail, guardian: email, startTime: start,  endTime: end, location: location, size: 555}));
     setModalVisible(false);
     setName('');
   }
@@ -41,21 +53,16 @@ const AddTodoModal = ({ modalVisible, setModalVisible, email, dependentEmail }) 
           <Pressable onPress={closeModal} style={styles.modalDismissButton}>
             <Text style={styles.modalDismissText}>X</Text>
           </Pressable>
-          <TextInput
-            onChangeText={setGuardian}
-            placeholder="guardian"
-            style={styles.modalInput}
-          />
-          <TextInput
-            onChangeText={setSize}
-            placeholder="size"
-            style={styles.modalInput}
-          />
-          <TextInput
-            onChangeText={setTime}
-            placeholder="time"
-            style={styles.modalInput}
-          />
+          <DateTimePicker
+            mode={"time"}
+            value={start}
+            // onChange={setStart}
+            />
+          <DateTimePicker
+            mode={"time"}
+            value={end}
+            // onChange={setEnd}
+            />
           <Pressable onPress={addTodo} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Save Todo</Text>
           </Pressable>
@@ -69,7 +76,6 @@ const TodoList = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-
     //query the initial todolist and subscribe to data updates
     const subscription = DataStore.observeQuery(Bounds).subscribe((snapshot) => {
       //isSynced can be used to show a loading spinner when the list is being loaded. 
@@ -128,6 +134,14 @@ const TodoList = () => {
 
 const SetBoundary = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [location, setLocation] = useState('');
+
+  useEffect(() => {
+    if(route.params.location != null){
+        setModalVisible(true);
+        // setLocation(location);
+    }
+  }, []);
 
   return (
     <>
@@ -145,6 +159,7 @@ const SetBoundary = ({ route }) => {
         setModalVisible={setModalVisible}
         email={route.params.email}
         dependentEmail={route.params.dependentEmail}
+        location={route.params.location}
       />
     </>
   );

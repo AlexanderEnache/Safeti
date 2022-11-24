@@ -2,8 +2,9 @@ type Bounds @model @auth(rules: [{allow: public}]) {
   id: ID!
   email: AWSEmail
   guardian: AWSEmail
+  timeStart: AWSTime
+  timeStop: AWSTime
   location: String
-  time: AWSTime
   size: Float
 }
 

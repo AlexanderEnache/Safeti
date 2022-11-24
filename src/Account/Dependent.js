@@ -109,7 +109,7 @@ const Dependent = ({ navigation, route }) => {
     lat = coords.nativeEvent.coordinate.latitude;
     lon = coords.nativeEvent.coordinate.longitude;
 
-    navigation.navigate("SetBoundary", {lat: lat, lon: lon});
+    navigation.navigate("SetBoundary", {location: lat+","+lon});
   }
 
   // function Toggle() {
@@ -153,6 +153,11 @@ const Dependent = ({ navigation, route }) => {
             );}}>
             <Text>Set Boundary</Text>
           </Pressable>
+          <Pressable style={styles.buttonContainerPressed} onPress={() => {
+            navigation.navigate("SetBoundary", {lat: null, lon: null});
+          }}>
+            <Text>View Boundaries</Text>
+          </Pressable>
         </View>
 
         <MapView id={"mapid"} style={styles.map} 
@@ -171,6 +176,16 @@ const Dependent = ({ navigation, route }) => {
             }}
             title={"title"}
             description={"description"}
+          />
+
+          <MapView.Circle
+            key = { '(this.state.current3Longitude + this.state.currentLongitude).toString()1' }
+            center = { {latitude: boundaryLat, longitude: boundaryLon} }
+            radius = { 40 }
+            strokeWidth = { 1 }
+            strokeColor = { '#1a66ff' }
+            fillColor = { 'rgba(230,238,255,0.5)' }
+            // onRegionChangeComplete = { this.onRegionChangeComplete.bind(this) }
           />
 
           <MapView.Circle
