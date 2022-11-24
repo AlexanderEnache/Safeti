@@ -180,16 +180,6 @@ const Dependent = ({ navigation, route }) => {
 
           <MapView.Circle
             key = { '(this.state.current3Longitude + this.state.currentLongitude).toString()1' }
-            center = { {latitude: boundaryLat, longitude: boundaryLon} }
-            radius = { 40 }
-            strokeWidth = { 1 }
-            strokeColor = { '#1a66ff' }
-            fillColor = { 'rgba(230,238,255,0.5)' }
-            // onRegionChangeComplete = { this.onRegionChangeComplete.bind(this) }
-          />
-
-          <MapView.Circle
-            key = { '(this.state.current3Longitude + this.state.currentLongitude).toString()1' }
             center = { {latitude: boundaryLat1, longitude: boundaryLon1} }
             radius = { 40 }
             strokeWidth = { 1 }

@@ -10,6 +10,7 @@ import { DataStore } from 'aws-amplify';
 import SetBoundary from './SetBoundary';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import { AntDesign } from '@expo/vector-icons';
 
 let toggle = false;
 
@@ -51,6 +52,10 @@ const DependentTabNavigator = ({ route }) => {
             initialParams={{userEmail: route.params.userEmail, email: route.params.email, location: location}}
             options={{
                 header: () => (
+                  null
+                ),
+                // tabBarLabel: 'Home',
+                tabBarIcon: () => (
                   null
                 ),
               }}/>

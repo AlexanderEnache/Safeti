@@ -16,7 +16,6 @@ const AddDependent = ({ route, navigation }) => {
 
     async function Add() {
         try{
-            email
             await DataStore.save(
                 new Dependents({
                     "email": email,

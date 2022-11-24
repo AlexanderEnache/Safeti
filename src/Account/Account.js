@@ -12,9 +12,10 @@ const Account = ({ route, navigation }) => {
     const [location, setLocation] = useState(null);
     const [userEmail, setUserEmail] = useState('');
 
-    // useEffect(() => {
-    //   console.log(route);
-    // }, []);
+    useEffect(() => {
+      console.log("GUARDIAN EMAIL");
+      console.log(route);
+    }, []);
 
 const Tab = createBottomTabNavigator();
 

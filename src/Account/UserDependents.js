@@ -68,6 +68,14 @@ const UserDependents = ({ route, navigation }) => {
       
         }, []);
 
+        async function deleteTodo(todo) {
+          try {
+            await DataStore.delete(todo);
+          } catch (e) {
+            console.log('Delete failed: $e');
+          }
+        }
+
         const renderItem = ({ item }) => (
           <Pressable
             onPress={() => {
@@ -78,6 +86,12 @@ const UserDependents = ({ route, navigation }) => {
             <Text>
               <Text>{item.name}</Text>
             </Text>
+
+            <Pressable style={[styles.checkbox, item.isComplete && styles.completedCheckbox]}
+            onPress={() => {
+              deleteTodo(item);
+            }}
+          ><Text>X</Text></Pressable>
           </Pressable>
         );
       

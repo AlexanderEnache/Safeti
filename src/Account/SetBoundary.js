@@ -24,15 +24,8 @@ const AddTodoModal = ({ modalVisible, setModalVisible, email, dependentEmail, lo
   const [end, setEnd] = useState(new Date());
 
   async function addTodo() {
-    console.log("location");
-    console.log("location");
-    console.log("location");
-    console.log("location");
-    console.log("location");
-    console.log("location");
-    console.log("location");
     console.log(location);
-    await DataStore.save(new Bounds({ email: dependentEmail, guardian: email, startTime: start,  endTime: end, location: location, size: 555}));
+    await DataStore.save(new Bounds({ name: name, email: dependentEmail, guardian: email, startTime: start,  endTime: end, location: location, size: 555}));
     setModalVisible(false);
     setName('');
   }
@@ -62,7 +55,12 @@ const AddTodoModal = ({ modalVisible, setModalVisible, email, dependentEmail, lo
             mode={"time"}
             value={end}
             // onChange={setEnd}
-            />
+          />
+          <TextInput
+            onChangeText={setName}
+            placeholder="Name"
+            style={styles.modalInput}
+          />
           <Pressable onPress={addTodo} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>Save Todo</Text>
           </Pressable>
@@ -113,7 +111,7 @@ const TodoList = () => {
       style={styles.todoContainer}
     >
       <Text>
-        <Text>{item.email}</Text>
+        <Text>{item.name}</Text>
       </Text>
       <Pressable style={[styles.checkbox, item.isComplete && styles.completedCheckbox]}
       onPress={() => {
