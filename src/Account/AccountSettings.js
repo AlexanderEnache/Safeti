@@ -4,7 +4,8 @@ import {
   Text,
   Platform,
   Pressable,
-  View
+  View,
+  ImageBackground
 } from 'react-native';
 import { Auth } from 'aws-amplify';
 
@@ -15,8 +16,12 @@ const Account = ({ navigation }) => {
 
   return (
     <>
-        <View>
-            <Pressable
+        <ImageBackground
+            source={require('./bg.png')}
+            style={{width: '100%', height: '100%'}}>
+        <View style={styles.center}>
+            <Text style={styles.warningText}>Are you sure you'd like to logout?</Text>
+            <Pressable style={styles.buttonContainer}
                 onPress={async () => {
                     try {
                         await Auth.signOut();
@@ -29,6 +34,7 @@ const Account = ({ navigation }) => {
                 <Text>Signout</Text>
             </Pressable>
         </View>
+        </ImageBackground>
     </>
   );
 };
@@ -124,6 +130,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
   },
+  center: {
+    //justifyContent:'flex',
+    //alignContent: 'center',
+    alignSelf:'center',
+    height: '10%',
+    width: '95%',
+    marginTop: '10%'
+  },
+  warningText: {
+    color:'black',
+    fontSize:24,
+    alignSelf:'center',
+    marginBottom: 25
+  }
 });
 
 export default Account;

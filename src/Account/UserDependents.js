@@ -4,14 +4,14 @@ import {
   Text,
   Platform,
   FlatList,
-  Pressable
+  Pressable,
+  ImageBackground
 } from 'react-native';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import * as Location from 'expo-location';
 
 const UserDependents = ({ route, navigation }) => {
-
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
         const [location, setLocation] = useState(null);
