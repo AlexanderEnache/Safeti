@@ -7,60 +7,32 @@ import {
   Pressable,
   ImageBackground
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import * as Location from 'expo-location';
 
 const UserDependents = ({ route, navigation }) => {
-    // const [location, setLocation] = useState(null);
-    const [userEmail, setUserEmail] = useState('');
-
-    useEffect(() => {
-        AsyncStorage.getItem("@user").then((value) => {
-            setUserEmail(value.toLowerCase());
-        });
-
-        // console.log(route);
-        // (async () => {
-        //     let { status } = await Location.requestForegroundPermissionsAsync();
-        //     if (status !== 'granted') {
-        //       setErrorMsg('Permission to access location was denied');
-        //       return;
-        //     }
-        //     let loc = await Location.getCurrentPositionAsync({});
-        //     setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
-        //     console.log(loc.coords.latitude);
-        // })();
-    }, []);
-
-    // console.log(userEmail);
-
-    
     const DependentList = () => {
         const [dependents, setDependents] = useState([]);
         const [location, setLocation] = useState(null);
       
         useEffect(() => {
+
+          console.log("TRYING TO MAKE IT WORK");
+          console.log(route.params);
+
           const subscription = DataStore.observeQuery(Dependents).subscribe((snapshot) => {
             const { items, isSynced } = snapshot;
 
             let all = items.slice();
-
-            // console.log(items);
-
             
             for(let i = 0; i < items.length; i++){
-              if(items[i].guardian !== userEmail){
+              if(items[i].guardian !== route.params.userEmail){
                 items.splice(i);
               }
             }
             
             setDependents(items);
-
-            // console.log("all");
-
-            // console.log(all);
 
             (async () => {
               let { status } = await Location.requestForegroundPermissionsAsync();
@@ -70,26 +42,18 @@ const UserDependents = ({ route, navigation }) => {
               }
               let loc = await Location.getCurrentPositionAsync({});
               setLocation({lat: loc.coords.latitude, lon: loc.coords.longitude});
-              // console.log(loc.coords.latitude);
-  
-              /* Models in DataStore are immutable. To update a record you must use the copyOf function
-              to apply updates to the item’s fields rather than mutating the instance directly */
-  
-              // console.log("ASASASASASSASASA");
-              // console.log(dependents);
   
               let sef = false;
               for(let i = 0; i < all.length; i++){
                 // console.log(dependents[i].email + " ,,,,, " + userEmail);
   
-                if(all[i].email == userEmail){
+                if(all[i].email == route.params.userEmail){
                   sef = all[i];
                   // console.log(dependents[i].email + " ,,,,, " + userEmail);
                   // dependents.splice(i);
                 }
               }
               if(sef){
-                // console.log("Yes dependent");
                 await DataStore.save(Dependents.copyOf(sef, item => {
                   item.location = loc.coords.latitude + "," + loc.coords.longitude;
                 }));
@@ -104,16 +68,30 @@ const UserDependents = ({ route, navigation }) => {
       
         }, []);
 
+        async function deleteTodo(todo) {
+          try {
+            await DataStore.delete(todo);
+          } catch (e) {
+            console.log('Delete failed: $e');
+          }
+        }
+
         const renderItem = ({ item }) => (
           <Pressable
             onPress={() => {
-              navigation.navigate("Dependent", { email: item.email, userEmail: userEmail});
+              navigation.navigate("DependentTabNavigator", {email: item.email, userEmail: route.params.userEmail});
             }}
             style={styles.todoContainer}
           >
             <Text>
               <Text>{item.name}</Text>
             </Text>
+
+            <Pressable style={[styles.checkbox, item.isComplete && styles.completedCheckbox]}
+            onPress={() => {
+              deleteTodo(item);
+            }}
+          ><Text>X</Text></Pressable>
           </Pressable>
         );
       

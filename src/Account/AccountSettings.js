@@ -7,15 +7,11 @@ import {
   View,
   ImageBackground
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Auth } from 'aws-amplify';
 
 
 const Account = ({ navigation }) => {
     // useEffect(() => {
-    //     AsyncStorage.getItem("@user").then((value) => {
-    //         setUserEmail(value);
-    //     });
     // }, []);
 
   return (

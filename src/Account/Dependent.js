@@ -15,10 +15,11 @@ import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 import MapView from 'react-native-maps';
 import { Bounds } from '../models';
+import { NavigationHelpersContext } from '@react-navigation/native';
 
 let toggle = false;
 
-const Dependent = ({ route }) => {
+const Dependent = ({ navigation, route }) => {
   const [email, setUserEmail] = useState('');
   const [dependentEmail, setDependentEmail] = useState('');
 
@@ -45,178 +46,61 @@ const Dependent = ({ route }) => {
       return {lat: 45, lon: 45};
   });
   const [bounds, setBounds] = useState([]);
-  
-  // const [toggle, setToggle] = useState(false);f
+
   const boundLength = 0.00090;
   let lat = 0; 
   let lon = 0;
-  // let email = '';
 
   useEffect(() => {
-    // AsyncStorage.getItem("@user").then((value) => {
-    //   email = value;
-    // });
-
-    // console.log(route.params);
-
     getDependentLocation();
 
     setUserEmail(route.params.userEmail);
     setDependentEmail(route.params.email);
 
-    console.log("HEEHRHEHEHEHREHRHERHEREHRHER");
-    // console.log(route.params);
-    // console.log(email);
-
-
     StartShit();
-
-    // markBounds(email);
-
   }, []);
 
   async function StartShit(){
     const models = await DataStore.query(Bounds);
-    console.log("Right here");
-    console.log(models);
+    let i = 0;
+    let arr = [];
 
-    for(let i = 0; i < models.length; i++){
-      console.log("BEFORE");
-      // console.log(email + " " + dependentEmail); 
-      // console.log(models[i].guardian + " " + models[i].email);
+    for(; i < models.length; i++){
       if(models[i].guardian != route.params.userEmail || models[i].email != route.params.email){
         console.log("SPLICESSSSS");
-        // console.log(models[i]);
-        models.splice(i);
-        // console.log(models[i].email);
-        // console.log(models[i].guardian);
-        // console.log(models[i].location);
-        // console.log(models[i].size);
-        // console.log(models[i].time);
+      }else{
+        arr.push(models[i]);
       }
     }
 
-    if(models.length > 0){
-      setBoundaryLat1(Number(models[0].location.split(',')[0]));
-      setBoundaryLon1(Number(models[0].location.split(',')[1]));
-      console.log("11111111111111");
+    if(arr.length > 0){
+      setBoundaryLat1(Number(arr[0].location.split(',')[0]));
+      setBoundaryLon1(Number(arr[0].location.split(',')[1]));
     }
 
-    if(models.length > 1){
-      setBoundaryLat2(Number(models[1].location.split(',')[0]));
-      setBoundaryLon2(Number(models[1].location.split(',')[1]));
-      console.log("22222222222222");
+    if(arr.length > 1){
+      setBoundaryLat2(Number(arr[1].location.split(',')[0]));
+      setBoundaryLon2(Number(arr[1].location.split(',')[1]));
     }
 
-    if(models.length > 2){
-      setBoundaryLat3(Number(models[2].location.split(',')[0]));
-      setBoundaryLon3(Number(models[2].location.split(',')[1]));
-      console.log("33333333333333");
+    if(arr.length > 2){
+      setBoundaryLat3(Number(arr[2].location.split(',')[0]));
+      setBoundaryLon3(Number(arr[2].location.split(',')[1]));
     }
 
-    if(models.length > 3){
-      setBoundaryLat4(Number(models[3].location.split(',')[0]));
-      setBoundaryLon4(Number(models[3].location.split(',')[1]));
-      console.log("44444444444444");
+    if(arr.length > 3){
+      setBoundaryLat4(Number(arr[3].location.split(',')[0]));
+      setBoundaryLon4(Number(arr[3].location.split(',')[1]));
     }
 
-    if(models.length > 4){
-      setBoundaryLat5(Number(models[4].location.split(',')[0]));
-      setBoundaryLon5(Number(models[4].location.split(',')[1]));
-      console.log("55555555555555");
+    if(arr.length > 4){
+      setBoundaryLat5(Number(arr[4].location.split(',')[0]));
+      setBoundaryLon5(Number(arr[4].location.split(',')[1]));
     }
-
-    // setBounds(models);
-
-    // console.log(models);
   }
-  
-
-
-  ///////////////////////////////////////////////////////////////////
-  
-  const List = ({bounds}) => {
-    // const [bounds, setBounds] = useStacte([]);
-  
-    // useEffect(() => {
-    //   StartShit(email, dependentEmail);
-    // }, []);
-
-    // async function StartShit(email, dependentEmail){
-    //   const models = await DataStore.query(Bounds);
-    //   // console.log("Right here");
-    //   // console.log(models);
-  
-    //   // for(let i = 0; i < models.length; i++){
-    //   //   if(!(models[i].guardian == email && models[i].email == dependentEmail)){
-    //   //     models.splice(i);
-    //   //     // console.log(models[i].email);
-    //   //     // console.log(models[i].guardian);
-    //   //     // console.log(models[i].location);
-    //   //     // console.log(models[i].size);
-    //   //     // console.log(models[i].time);
-    //   //   }
-    //   // }
-    //   setBounds(models);
-    //   console.log(models);
-    // }
-
-    console.log(bounds);
-  
-    const renderItem = ({ item }) => (
-
-      // <Text>AHAHAHAH</Text>
-
-      <MapView.Circle
-        // key = { '(this.state.currentLongitude + this.state.currentLongitude).toString()' }
-        center = { {latitude: 42.308330, longitude: -82.878564} }
-        // center = { {latitude: item.location.split(',')[0], longitude: item.location.split(',')[1]} }
-        radius = { 40 }
-        strokeWidth = { 1 }
-        strokeColor = { '#1a66ff' }
-        fillColor = { 'rgba(230,238,255,0.5)' }
-        // onRegionChangeComplete = { this.onRegionChangeComplete.bind(this) }
-      />
-
-      // <Pressable
-      //   onLongPress={() => {
-      //     deleteTodo(item);
-      //   }}
-      //   onPress={() => {
-      //     setComplete(!item.isComplete, item);
-      //   }}
-      //   style={styles.todoContainer}
-      // >
-      //   <Text>
-      //     <Text style={styles.todoHeading}>{item.name}</Text>
-      //     {`\n${item.description}`}
-      //   </Text>
-      //   <Text
-      //     style={[styles.checkbox, item.isComplete && styles.completedCheckbox]}
-      //   >
-      //     {item.isComplete ? '✓' : ''}
-      //   </Text>
-      // </Pressable>
-    );
-
-    console.log("bounds");
-    // console.log(bounds[0]);
-  
-    return (
-      <FlatList
-        data={bounds}
-        // eyExtractor={({ id }) => id}
-        renderItem={renderItem}
-      />
-    );
-  };
-
-  ///////////////////////////////////////////////////////////////////
-
-
 
   async function SetBoundary(coords) {
-    // console.log(toggle);
+    console.log(coords);
     if(!toggle){
       return;
     }
@@ -226,43 +110,22 @@ const Dependent = ({ route }) => {
     lat = coords.nativeEvent.coordinate.latitude;
     lon = coords.nativeEvent.coordinate.longitude;
 
-    setBoundaryLat(lat);
-    setBoundaryLon(lon);
-
-    // isBetween
-
-    if(
-      location.lat > lat + boundLength/2 || 
-      location.lat < lat - boundLength/2 ||
-      location.lon > lon + boundLength/2 || 
-      location.lon < lon - boundLength/2
-    ){
-      // console.log("Out of Bounds");
-      Alert.alert(
-        "",
-        "Your child is currently OUT OF BOUNDS",
-      );
-    }else{
-      Alert.alert(
-        "",
-        "Your child is currently in bounds",
-      );
-    }
+    navigation.navigate("SetBoundary", {location: lat+","+lon});
   }
 
-  function Toggle() {
-    // console.log(toggle);
-    if(toggle){
-      return;
-    }
-    toggle = true;
-    // console.log(toggle);
-    Alert.alert(
-      "",
-      "Click where you want to set a boundary",
-    );
-    setIsToggle(toggle);
-  }
+  // function Toggle() {
+  //   // console.log(toggle);
+  //   if(toggle){
+  //     return;
+  //   }
+  //   toggle = true;
+  //   // console.log(toggle);
+  //   Alert.alert(
+  //     "",
+  //     "Click where you want to set a boundary",
+  //   );
+  //   setIsToggle(toggle);
+  // }
 
   async function getDependentLocation() {
     try{
@@ -270,10 +133,8 @@ const Dependent = ({ route }) => {
         // console.log(models);
 
         for(let i = 0; i < models.length; i++){
-          // console.log(models[i].location);
             if(models[i].email == route.params.email){
                 setLocation({lat: Number(models[i].location.split(',')[0]), lon: Number(models[i].location.split(',')[1])});
-                // console.log(models[i].location);
             }
         }
     }catch(e){
@@ -287,24 +148,23 @@ const Dependent = ({ route }) => {
             source={require('./bg.png')}
             style={{width: '100%', height: '100%'}}>
       <View>
-      {/* {!toggle ?
         <View>
-          <Pressable style={styles.buttonContainer} onPress={() => {Toggle()}}>
+          <Pressable style={styles.buttonContainerPressed} onPress={() => {
+            toggle = true;
+            Alert.alert(
+              "",
+              "Click where you want to set a boundary",
+            );}}>
             <Text>Set Boundary</Text>
+          </Pressable>
+          <Pressable style={styles.buttonContainerPressed} onPress={() => {
+            navigation.navigate("SetBoundary", {lat: null, lon: null});
+          }}>
+            <Text>View Boundaries</Text>
           </Pressable>
         </View>
-      : <View>
-          <Pressable style={styles.buttonContainerPressed} onPress={() => {Toggle()}}>
-            <Text>Set Boundary</Text>
-          </Pressable>
-        </View>} */}
 
-        {/* <Text>ASDASADSADSADSA</Text>
-        <List bounds={bounds}/> */}
-
-        {/* <List bounds={bounds}/> */}
-
-        <MapView style={styles.map} 
+        <MapView id={"mapid"} style={styles.map} 
             region={{
                 latitude: location.lat, 
                 longitude: location.lon,
@@ -320,17 +180,6 @@ const Dependent = ({ route }) => {
             }}
             title={"title"}
             description={"description"}
-          />
-
-
-          <MapView.Circle
-            key = { '(this.state.currentLongitude + this.state.currentLongitude).toString()' }
-            center = { {latitude: boundaryLat, longitude: boundaryLon} }
-            radius = { 40 }
-            strokeWidth = { 1 }
-            strokeColor = { '#1a66ff' }
-            fillColor = { 'rgba(230,238,255,0.5)' }
-            // onRegionChangeComplete = { this.onRegionChangeComplete.bind(this) }
           />
 
           <MapView.Circle

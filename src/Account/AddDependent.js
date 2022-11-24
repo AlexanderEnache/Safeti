@@ -8,37 +8,19 @@ import {
   View,
   ImageBackground
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dependents } from '../models';
 import { DataStore } from 'aws-amplify';
 
-const AddDependent = ({ navigation }) => {
-    const [userEmail, setUserEmail] = useState('');
+const AddDependent = ({ route, navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
 
-    useEffect(() => {
-        AsyncStorage.getItem("@user").then((value) => {
-            setUserEmail(value);
-        });
-    }, []);
-
-    console.log(userEmail);
-
     async function Add() {
-
-        // try {
-        //     const user = await Auth.signIn(username, password);
-        // } catch (error) {
-        //     console.log('error signing in', error);
-        // }
-
         try{
-            email
             await DataStore.save(
                 new Dependents({
                     "email": email,
-                    "guardian": userEmail,
+                    "guardian": route.params.userEmail,
                     "name": name
                 })
             );
